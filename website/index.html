@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>PS5 lager tjekker</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container-sm bg-light text-black pt-3" id="main">
+        <div>
+            <row>
+                <h3>PS5 Lager tjekker</h3>
+            </row>
+        </div>
+        <div class="pt-3">
+            <div class="row">
+                <div class="col-4">
+                    <p>Denne hjemmeside er til for at hjælpe med at holde dig opdateret på PS5 lagerstatus.</p>
+                    <p>Hjemmesiden bliver opdateret hvert 5. sekund med de nyeste informationer. Hvis du ikke vil sidde og holde øje med hjemmesiden anbefales det, at du tilmelder dig email notifikationer. Vi sender kun en email hvis en lagerstatus ændrer sig til "på lager".</p>
+                    <p>Vi tjekker følgende butikker:</p>
+                    <ol>
+                        <li>Elgiganten</li>
+                        <li>Bilka</li>
+                        <li>Proshop</li>
+                    </ol>
+                </div>
+
+                <div class="col-8">
+                    <form>
+                      <div class="row">
+                        <div class="col-5">
+                            <input type="email" class="form-control" id="email-adress" aria-describedby="emailHelp" placeholder="Indtast email adresse">
+                            <small id="emailHelp" class="form-text text-muted">Vi kommer aldrig til at dele din email adresse med nogen. Du kommer ikke til at modtage spam.</small>
+                        </div>
+                        <div class="col-7">
+                          <button type="submit" class="btn btn-primary">Tilføj email adresse</button>
+                        </div>
+                      </div>
+                    </form>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Butik</th>
+                          <th scope="col">Model</th>
+                          <th scope="col">Lagerstatus</th>
+                          <th scope="col">Link</th>
+                          <th scope="col">Sidst opdateret</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Elgiganten</th>
+                          <td>Digital</td>
+                          <td>Ikke på lager</td>
+                          <td>Link</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Elgiganten</th>
+                          <td>Standard</td>
+                          <td>Ikke på lager</td>
+                          <td>Link</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Bilka</th>
+                          <td>Standard</td>
+                          <td>Ikke på lager</td>
+                          <td>Link</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Bilka</th>
+                          <td>Digital</td>
+                          <td>Ikke på lager</td>
+                          <td>Link</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  <script src="script.js"></script>
+</body>
+</html>
