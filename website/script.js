@@ -1,101 +1,51 @@
-var date = new Date();
-var now = date.getTime();
-const select_file_type = document.querySelector("#select-type");
-const select_images = document.querySelector("#form-select-images");
-const select_video = document.querySelector("#form-select-video");
-console.log(now);
+let table = document.querySelector("table");
 
-function change_visibility(divName, hide) {
-    if (hide == true) {
-        document.getElementById(divName).setAttribute("hidden","");
-    } else {
-        document.getElementById(divName).removeAttribute("hidden");
-    }
-}
+const head = ["Butik", "Model", "Lagerstatus", "Sidst opdateret"];
+
+window.addEventListener("load", function () {
+    const data = '';
+    fetch('/status')
+        .then(response => response.json())
+        .then(function(data) {
+            let thead = table.createTHead();
+            let row = thead.insertRow();
+
+            for (key of head) {
+                console.log(key);
+                let th = document.createElement("th");
+                let text = document.createTextNode(key)
+                th.appendChild(text);
+                row.appendChild(th);
+            }
+
+            for (const i of Object.entries(data)) {
+                const product_url = i[1]["product_url"];
+                const product_name = i[1]["product_name"];
+                const store = i[1]["store"];
+                const time = i[1]["time"];
+                const stock = i[1]["stock"];
+                let therow = [store, product_name, stock, time];
+                let row = table.insertRow();
+                for (ce of therow) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(ce);
+                    cell.appendChild(text);
+                }
+
+                console.log(product_url, store, time, stock)
+            }
 
 
-document.forms['form-images'].addEventListener('submit', (event) => {
-    formData = new FormData(event.target);
-    formData.append('time', now);
-    event.preventDefault();
-    console.log('Clicked');
-    console.log(event);
-    change_visibility("spinner-images", false)
-    fetch(event.target.action, {
-        method: 'POST',
-        body: formData // event.target is the form
-    }).then((resp) => {
-        change_visibility("spinner-images", true)
-        return resp.json(); // or resp.text() or whatever the server sends
-    }).then((body) => {
-        console.log(body)
-    }).catch((error) => {
-        console.log(error)
-    });
+
+        });
+
 });
-
-document.forms['form-video'].addEventListener('submit', (event) => {
-    formData = new FormData(event.target);
-    formData.append('time', now);
+document.forms['form-email'].addEventListener('submit', (event) => {
     event.preventDefault();
-    console.log('Clicked');
-    console.log(event);
-    change_visibility("spinner-video", false)
-    fetch(event.target.action, {
-        method: 'POST',
-        body: formData // event.target is the form
-    }).then((resp) => {
-        change_visibility("spinner-video", true)
-        return resp.json(); // or resp.text() or whatever the server sends
-    }).then((body) => {
-        console.log(body)
-    }).catch((error) => {
-        console.log(error)
-    });
+    const email = document.getElementById('email-adress').value;
+
+    console.log(email);
+    fetch('/add-email?email=' + email)
+        .then(response => response.json())
+        .then(document.getElementById('emailHelp').innerHTML = "Vi har tilføjet din email adresse");
 });
-
-const displayWhenSelected = (source, value, target) => {
-    const selectedIndex = source.selectedIndex;
-    const isSelected = source[selectedIndex].value === value;
-    target.classList[isSelected
-        ? "add"
-        : "remove"
-    ]("show");
-};
-select_file_type.addEventListener("change", (evt) =>
-    displayWhenSelected(select_file_type, "image", select_images)
-);
-
-select_file_type.addEventListener("change", (evt) =>
-    displayWhenSelected(select_file_type, "video", select_video)
-);
-
-function check_empty_images() {
-    let images = document.getElementById("image-file").files;
-    let background = document.getElementById("image-file-background").files;
-    let quality = document.querySelector('input[name="inlineRadioOptions"]:checked');
-    const button = document.getElementById('upload-images');
-    console.log(quality, images, background);
-
-
-    if (images.length > 0 && background.length > 0) {
-        button.disabled = false;
-    } else {
-        button.disabled = true;
-    }
-}
-
-function check_empty_video() {
-    let video = document.getElementById("video-file").files;
-    let background = document.getElementById("video-file-background").files;
-    let quality = document.querySelector('input[name="inlineRadioOptions"]:checked');
-    const button = document.getElementById('upload-video');
-    console.log(quality, video, background)
-
-
-    if (video.length > 0 && background.length > 0) {
-        button.disabled = false;
-    } else {
-        button.disabled = true;
-    }
-}
