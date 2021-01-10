@@ -1,4 +1,4 @@
 uvicorn
 fastapi
-json
+aiofiles
 beautifulsoup4
