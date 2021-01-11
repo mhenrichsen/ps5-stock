@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
             for (key of head) {
                 console.log(key);
                 let th = document.createElement("th");
-                let text = document.createTextNode(key)
+                let text = document.createTextNode(key);
                 th.appendChild(text);
                 row.appendChild(th);
             }
@@ -27,9 +27,19 @@ window.addEventListener("load", function () {
                 let therow = [store, product_name, stock, time];
                 let row = table.insertRow();
                 for (ce of therow) {
-                    let cell = row.insertCell();
-                    let text = document.createTextNode(ce);
-                    cell.appendChild(text);
+                    if (ce.includes('lager')) {
+                        console.log('link found');
+                        let cell = row.insertCell();
+                        let link = document.createElement("a");
+                        var href = product_url;
+                        link.href = href;
+                        link.innerHTML = ce;
+                        cell.appendChild(link);
+                    } else {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(ce);
+                        cell.appendChild(text);
+                    }
                 }
 
                 console.log(product_url, store, time, stock)

@@ -1,27 +1,49 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import time
 
-#The mail addresses and password
+timeout = 15 * 60
+last_run = [time.time()]
+
 sender_address = 'mghenrichsen@gmail.com'
-sender_pass = 'password'
+sender_pass = '0000'
 
 
-def send_email(receiver, store, url):
-    message = MIMEMultipart()
+def send_email(in_stock):
+    print(last_run)
+    if timeout + last_run[-1] > time.time():
+        print('We sent out emails less than 15 minutes ago')
 
-    message['From'] = 'PS5 Lager checker'
-    message['To'] = receiver
-    message['Subject'] = 'Playstation er på lager hos ' + store
-    mail_content = 'Playstation er kommer på lager! ' + url
-    message.attach(MIMEText(mail_content, 'plain'))
+    else:
+        with open("emails.txt") as f:
+            emails = f.readlines()
+            for email in emails:
+                session = smtplib.SMTP('smtp.gmail.com', 587)
+                session.starttls()  # enable security
+                session.login(sender_address, sender_pass)
 
-    session = smtplib.SMTP('smtp.gmail.com', 587)
-    session.starttls() #enable security
-    session.login(sender_address, sender_pass)
+                message = MIMEMultipart()
+                message['To'] = email
+                message['From'] = 'PS5 lagerstatus'
+                content = ''
+                for i in in_stock:
+                    store = i['store']
+                    product = i['name']
+                    url = i['url']
 
-    text = message.as_string()
+                    content = content + 'Playstation ' + product + ' er på lager hos ' + store + '. ' + url + '\n'
+                message['Subject'] = 'Playstation er på lager!'
+                print(content)
+                mail_content = content
+                message.attach(MIMEText(mail_content, 'plain'))
 
-    session.sendmail(sender_address, receiver, text)
-    session.quit()
-    print('Mail Sent to ', receiver)
+                text = message.as_string()
+
+                session.sendmail(sender_address, email, text)
+                print('Mail Sent to ', email)
+
+                session.quit()
+
+        last_run.clear()
+        last_run.append(time.time())

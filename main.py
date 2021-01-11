@@ -5,19 +5,17 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 import json
 
-
 app = FastAPI()
+
 
 @app.get("/add-email")
 async def add_email(email: str):
     print(email)
     f = open("emails.txt", "a+")
-    f.write(email+'\n')
+    f.write(email + '\n')
     f.close()
 
     return JSONResponse({'Res': 'Email added'})
-
-
 
 
 @app.get("/status")
