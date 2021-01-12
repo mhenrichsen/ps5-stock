@@ -28,3 +28,10 @@ display: none;
 #form-select-video.show {
 display: block;
 }
+
+.inStock {
+    background-color:#61ee90;
+}
+.notInStock {
+    background-color: #ff9065;
+}
