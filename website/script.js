@@ -26,6 +26,11 @@ window.addEventListener("load", function () {
                 const stock = i[1]["stock"];
                 let therow = [store, product_name, stock, time];
                 let row = table.insertRow();
+                if (i[1]["stock"] == "På lager") {
+                    row.className = 'table-success'
+                } else {
+                    row.className = 'table-danger'
+                }
                 for (ce of therow) {
                     if (ce.includes('lager')) {
                         console.log('link found');
