@@ -41,7 +41,7 @@ while True:
 
         filtered = filter_html(url, find, identifier)
 
-        if store == "Elgiganten" or store == "Proshop":
+        if store == "Elgiganten" or store == "Proshop" or store == "Happii" or store == "Merlin":
             if filtered is None:
                 print("Item available", name, store)
                 update(product, "På lager", time.strftime('%H:%M:%S', time.localtime()), data)
@@ -50,7 +50,7 @@ while True:
                 print("Item unavailable", name, store)
                 update(product, "Ikke på lager", time.strftime('%H:%M:%S', time.localtime()), data)
 
-        elif store == "Bilka" or store == "Coolshop" or store == "Power" or store =="Foetex" or store == "BR" or store == "Expert" or store == "Happii" or store == "Merlin":
+        elif store == "Bilka" or store == "Coolshop" or store == "Power" or store =="Foetex" or store == "BR" or store == "Expert":
             if filtered is None:
                 print('Item unavailable', name, store)
                 update(product, "Ikke på lager", time.strftime('%H:%M:%S', time.localtime()), data)
