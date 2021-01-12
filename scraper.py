@@ -44,19 +44,19 @@ while True:
         if store == "Elgiganten" or store == "Proshop":
             if filtered is None:
                 print("Item available", name, store)
-                update(product, "På lager", time.strftime('%H.%M.%S', time.localtime()), data)
+                update(product, "På lager", time.strftime('%H:%M:%S', time.localtime()), data)
                 in_stock.append({'store': store, 'name': name, 'url': url})
             else:
                 print("Item unavailable", name, store)
-                update(product, "Ikke på lager", time.strftime('%H.%M.%S', time.localtime()), data)
+                update(product, "Ikke på lager", time.strftime('%H:%M:%S', time.localtime()), data)
 
         elif store == "Bilka" or store == "Coolshop" or store == "Power" or store =="Foetex" or store == "BR":
             if filtered is None:
                 print('Item unavailable', name, store)
-                update(product, "Ikke på lager", time.strftime('%H.%M.%S', time.localtime()), data)
+                update(product, "Ikke på lager", time.strftime('%H:%M:%S', time.localtime()), data)
             else:
                 print('Item available', name, store)
-                update(product, "På lager", time.strftime('%H.%M.%S', time.localtime()), data)
+                update(product, "På lager", time.strftime('%H:%M:%S', time.localtime()), data)
                 in_stock.append({'store': store, 'name': name, 'url': url})
 
         time.sleep(1)
