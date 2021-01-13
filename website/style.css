@@ -28,3 +28,6 @@ display: none;
 #form-select-video.show {
 display: block;
 }
+table {
+    border-radius: 5px;
+}

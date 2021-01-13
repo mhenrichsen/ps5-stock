@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from threading import Timer
 import re
@@ -13,23 +13,45 @@ FILE_NAME = "emails.txt"
 EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 MAX_REQUEST = 3  # Before timeout
 DEQUE_TIME = 60  # Seconds
-hostDict = {}
+host_dict = {}
 
 
 @app.get("/add-email")
 async def add_email(email: str, request: Request):
-    print(hostDict)
-    if request.client.host in hostDict:
-        if hostDict.get(request.client.host) < MAX_REQUEST:
-            hostDict[request.client.host] += 1
+    print(host_dict)
+    if request.client.host in host_dict:
+        if host_dict.get(request.client.host) < MAX_REQUEST:
+            host_dict[request.client.host] += 1
             # Check if email is valid
             if re.search(EMAIL_REGEX, email):
                 if await save_email(email):
                     return JSONResponse({'Res': 'Email added'})
         return JSONResponse({'Res': 'Invalid email'}, 400)
     else:
-        hostDict[request.client.host] = 0
+        host_dict[request.client.host] = 0
         return await add_email(email, request)
+
+
+@app.get("/remove-email")
+async def remove_email(email: str, request: Request):
+    with open("emails.txt", "r") as f:
+        lines = f.readlines()
+    with open("emails.txt", "w") as f:
+        for line in lines:
+            if line.strip("\n") != email:
+                f.write(line)
+
+    return HTMLResponse(
+        """
+        <html>
+            <head>
+                <title>Email fjernet</title>
+            </head>
+            <body>
+                <h1>""" + email + """ blev fjernet fra listen</h1>
+            </body>
+        </html>
+        """)
 
 
 # Save email to file
@@ -43,8 +65,6 @@ async def save_email(email: str):
     else:
         print("Email was duplicate: " + email)
         return False
-
-
 
 
 @app.get("/status")
@@ -63,14 +83,14 @@ class RepeatTimer(Timer):
 
 
 def deque_hosts():
-    toRemove = []
-    for host in hostDict:
-        if hostDict.get(host) == 0:
-            toRemove.append(host)
+    to_remove = []
+    for host in host_dict:
+        if host_dict.get(host) == 0:
+            to_remove.append(host)
         else:
-            hostDict[host] -= 1
-    for host in toRemove:
-        hostDict.pop(host)
+            host_dict[host] -= 1
+    for host in to_remove:
+        host_dict.pop(host)
 
 
 def file_contains_string(file_name, string_to_search):
@@ -93,4 +113,4 @@ app.mount("/", StaticFiles(directory="website", html=True), name="website")
 app.add_middleware(CORSMiddleware, allow_origins=["*"])
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8008)
+    uvicorn.run(app, host="0.0.0.0", port=80)
