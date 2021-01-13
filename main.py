@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from threading import Timer
 import re
@@ -32,6 +32,28 @@ async def add_email(email: str, request: Request):
         return await add_email(email, request)
 
 
+@app.get("/remove-email")
+async def remove_email(email: str, request: Request):
+    with open("emails.txt", "r") as f:
+        lines = f.readlines()
+    with open("emails.txt", "w") as f:
+        for line in lines:
+            if line.strip("\n") != email:
+                f.write(line)
+
+    return HTMLResponse(
+        """
+        <html>
+            <head>
+                <title>Email fjernet</title>
+            </head>
+            <body>
+                <h1>""" + email + """ blev fjernet fra listen</h1>
+            </body>
+        </html>
+        """)
+
+
 # Save email to file
 async def save_email(email: str):
     if not file_contains_string(FILE_NAME, email):
@@ -43,8 +65,6 @@ async def save_email(email: str):
     else:
         print("Email was duplicate: " + email)
         return False
-
-
 
 
 @app.get("/status")
