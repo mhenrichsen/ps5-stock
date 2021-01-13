@@ -46,8 +46,6 @@ window.addEventListener("load", function () {
                         cell.appendChild(text);
                     }
                 }
-
-                console.log(product_url, store, time, stock)
             }
 
 
@@ -59,8 +57,10 @@ document.forms['form-email'].addEventListener('submit', (event) => {
     event.preventDefault();
     const email = document.getElementById('email-adress').value;
 
-    console.log(email);
     fetch('/add-email?email=' + email)
         .then(response => response.json())
-        .then(document.getElementById('emailHelp').innerHTML = "Vi har tilføjet din email adresse");
+        .then(() => {
+            document.getElementById('email-adress').value = '';
+            document.getElementById('emailHelp').innerHTML = "Vi har tilføjet din email adresse";
+        });
 });

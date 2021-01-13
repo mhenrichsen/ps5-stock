@@ -13,22 +13,22 @@ FILE_NAME = "emails.txt"
 EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 MAX_REQUEST = 3  # Before timeout
 DEQUE_TIME = 60  # Seconds
-hostDict = {}
+host_dict = {}
 
 
 @app.get("/add-email")
 async def add_email(email: str, request: Request):
-    print(hostDict)
-    if request.client.host in hostDict:
-        if hostDict.get(request.client.host) < MAX_REQUEST:
-            hostDict[request.client.host] += 1
+    print(host_dict)
+    if request.client.host in host_dict:
+        if host_dict.get(request.client.host) < MAX_REQUEST:
+            host_dict[request.client.host] += 1
             # Check if email is valid
             if re.search(EMAIL_REGEX, email):
                 if await save_email(email):
                     return JSONResponse({'Res': 'Email added'})
         return JSONResponse({'Res': 'Invalid email'}, 400)
     else:
-        hostDict[request.client.host] = 0
+        host_dict[request.client.host] = 0
         return await add_email(email, request)
 
 
@@ -83,14 +83,14 @@ class RepeatTimer(Timer):
 
 
 def deque_hosts():
-    toRemove = []
-    for host in hostDict:
-        if hostDict.get(host) == 0:
-            toRemove.append(host)
+    to_remove = []
+    for host in host_dict:
+        if host_dict.get(host) == 0:
+            to_remove.append(host)
         else:
-            hostDict[host] -= 1
-    for host in toRemove:
-        hostDict.pop(host)
+            host_dict[host] -= 1
+    for host in to_remove:
+        host_dict.pop(host)
 
 
 def file_contains_string(file_name, string_to_search):
