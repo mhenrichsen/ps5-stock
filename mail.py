@@ -2,12 +2,13 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import time
+import os
 
 timeout = 15 * 60
 last_run = [time.time()]
 
 sender_address = 'mghenrichsen@gmail.com'
-sender_pass = '0000'
+sender_pass = os.environ['MY_PASS']
 
 
 def send_email(in_stock):
