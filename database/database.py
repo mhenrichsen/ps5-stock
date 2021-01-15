@@ -47,7 +47,14 @@ def create_email(conn, task):
 
 def check_duplicate_email(conn, email):
     all_emails = get_all_emails(conn)
-    return email in all_emails
+    duplicate = email in all_emails
+
+    if duplicate:
+        return False
+    else:
+        task = (email, time.time())
+        create_email(conn, task)
+        return True
 
 
 def get_all_emails(conn):
@@ -61,6 +68,7 @@ def get_all_emails(conn):
         all_emails.append(address[0])
 
     return all_emails
+
 
 @app.get("/direct-call")
 async def direct_call(call_type: str, email: Optional[str] = None):
@@ -83,7 +91,7 @@ async def direct_call(call_type: str, email: Optional[str] = None):
 
 
 def transfer_data():
-    with open('emails.txt', 'r') as f:
+    with open('../emails.txt', 'r') as f:
         for line in f:
             clean = line.split('\n')[0]
             direct_call('add_email', clean)
