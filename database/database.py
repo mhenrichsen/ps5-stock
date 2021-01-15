@@ -50,11 +50,11 @@ def check_duplicate_email(conn, email):
     duplicate = email in all_emails
 
     if duplicate:
-        return False
+        return JSONResponse({'Res': 'Duplicate'})
     else:
         task = (email, time.time())
         create_email(conn, task)
-        return True
+        return JSONResponse({'Res': 'Email added'})
 
 
 def get_all_emails(conn):
@@ -77,17 +77,15 @@ async def direct_call(call_type: str, email: Optional[str] = None):
 
     with conn:
         if call_type == "get_emails":
-            emails = get_all_emails(conn)
-            return emails
+            get_all_emails(conn)
 
         elif call_type == "add_email":
             task = (email, time.time())
             create_email(conn, task)
-            return True
 
         elif call_type == "duplicate_check":
-            duplicate = check_duplicate_email(conn, email)
-            return duplicate
+            check_duplicate_email(conn, email)
+
 
 
 def transfer_data():

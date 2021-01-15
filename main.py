@@ -15,7 +15,7 @@ EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 MAX_REQUEST = 3  # Before timeout
 DEQUE_TIME = 60  # Seconds
 host_dict = {}
-database_url = 'http://0.0.0.0:3000/direct-call'
+database_url = 'http://46.101.78.63:80/direct-call'
 
 
 @app.get("/add-email")
@@ -29,11 +29,14 @@ async def add_email(email: str, request: Request):
                 print(email + ' ready to be added')
                 params = {'call_type': "duplicate_check", "email": email}
                 added = requests.get(url=database_url, params=params)
-                if added:
+                print(added.json())
+                if added == True:
+                    print('Email added')
                     return JSONResponse({'Res': 'Email added'})
                 else:
+                    print('Duplicate email')
                     return JSONResponse({'Res': 'Duplicate email'})
-
+        print('Invalid email')
         return JSONResponse({'Res': 'Invalid email'}, 400)
     else:
         host_dict[request.client.host] = 0
