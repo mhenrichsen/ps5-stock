@@ -42,19 +42,20 @@ def create_email(conn, task):
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
-    return cur.lastrowid
+    return JSONResponse({'Res': 'Email added'})
 
 
 def check_duplicate_email(conn, email):
     all_emails = get_all_emails(conn)
     duplicate = email in all_emails
 
+    print(duplicate)
     if duplicate:
+        print(email + ' is duplicate')
         return JSONResponse({'Res': 'Duplicate'})
     else:
         task = (email, time.time())
         create_email(conn, task)
-        return JSONResponse({'Res': 'Email added'})
 
 
 def get_all_emails(conn):
@@ -63,7 +64,6 @@ def get_all_emails(conn):
 
     emails = cur.fetchall()
     all_emails = []
-    print(emails)
     for address in emails:
         all_emails.append(address[0])
 
