@@ -4,6 +4,7 @@ import time
 import uvicorn
 from fastapi import FastAPI
 from typing import Optional
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -47,11 +48,11 @@ def check_duplicate_email(conn, email):
     duplicate = email in all_emails
 
     if duplicate:
-        return False
+        return JSONResponse({'res': 'Duplicate email'})
     else:
         task = (email, time.time())
         create_email(conn, task)
-        return True
+        return JSONResponse({'res': 'Email added'})
 
 
 def get_all_emails(conn):
