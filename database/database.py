@@ -81,8 +81,8 @@ async def direct_call(call_type: str, email: Optional[str] = None):
 
         elif call_type == "add_email":
             task = (email, time.time())
-            create_email(conn, task)
-            return True
+            return create_email(conn, task)
+
 
         elif call_type == "duplicate_check":
             duplicate = check_duplicate_email(conn, email)
