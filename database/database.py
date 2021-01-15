@@ -40,7 +40,7 @@ def create_email(conn, task):
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
-    return cur.lastrowid
+    return JSONResponse({'res': 'Email added'})
 
 
 def check_duplicate_email(conn, email):
@@ -51,8 +51,7 @@ def check_duplicate_email(conn, email):
         return JSONResponse({'res': 'Duplicate email'})
     else:
         task = (email, time.time())
-        create_email(conn, task)
-        return JSONResponse({'res': 'Email added'})
+        return create_email(conn, task)
 
 
 def get_all_emails(conn):
@@ -82,7 +81,6 @@ async def direct_call(call_type: str, email: Optional[str] = None):
         elif call_type == "add_email":
             task = (email, time.time())
             return create_email(conn, task)
-
 
         elif call_type == "duplicate_check":
             duplicate = check_duplicate_email(conn, email)
