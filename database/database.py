@@ -43,7 +43,7 @@ def create_email(conn, task):
     return JSONResponse({'res': 'Email added'})
 
 
-def check_duplicate_email(conn, email):
+def check_email(conn, email):
     all_emails = get_all_emails(conn)
     duplicate = email in all_emails
 
@@ -78,13 +78,9 @@ async def direct_call(call_type: str, email: Optional[str] = None):
             emails = get_all_emails(conn)
             return emails
 
-        elif call_type == "add_email":
-            task = (email, time.time())
-            return create_email(conn, task)
-
         elif call_type == "duplicate_check":
-            duplicate = check_duplicate_email(conn, email)
-            return duplicate
+            res = check_email(conn, email)
+            return res
 
 
 def transfer_data():
