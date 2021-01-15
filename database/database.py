@@ -2,10 +2,7 @@ import sqlite3
 from sqlite3 import Error
 import time
 import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
 from typing import Optional
 
 app = FastAPI()
@@ -42,20 +39,19 @@ def create_email(conn, task):
     cur = conn.cursor()
     cur.execute(sql, task)
     conn.commit()
-    return JSONResponse({'Res': 'Email added'})
+    return cur.lastrowid
 
 
 def check_duplicate_email(conn, email):
     all_emails = get_all_emails(conn)
     duplicate = email in all_emails
 
-    print(duplicate)
     if duplicate:
-        print(email + ' is duplicate')
-        return JSONResponse({'Res': 'Duplicate'})
+        return False
     else:
         task = (email, time.time())
         create_email(conn, task)
+        return True
 
 
 def get_all_emails(conn):
@@ -64,9 +60,11 @@ def get_all_emails(conn):
 
     emails = cur.fetchall()
     all_emails = []
+    print(emails)
     for address in emails:
         all_emails.append(address[0])
 
+    print(all_emails)
     return all_emails
 
 
@@ -77,15 +75,17 @@ async def direct_call(call_type: str, email: Optional[str] = None):
 
     with conn:
         if call_type == "get_emails":
-            get_all_emails(conn)
+            emails = get_all_emails(conn)
+            return emails
 
         elif call_type == "add_email":
             task = (email, time.time())
             create_email(conn, task)
+            return True
 
         elif call_type == "duplicate_check":
-            check_duplicate_email(conn, email)
-
+            duplicate = check_duplicate_email(conn, email)
+            return duplicate
 
 
 def transfer_data():
