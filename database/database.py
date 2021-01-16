@@ -26,19 +26,19 @@ def create_connection(db_file):
 
     return conn
 
+
 def delete_email(conn, email):
     """
     Delete a task by task id
+    :param email:
     :param conn:  Connection to the SQLite database
-    :param id: id of the task
     :return:
     """
     sql = 'DELETE FROM emails WHERE name=?'
     cur = conn.cursor()
     cur.execute(sql, (email,))
     conn.commit()
-    return True
-
+    return JSONResponse({'res': 'Email removed'})
 
 
 def create_email(conn, task):
@@ -99,6 +99,7 @@ async def direct_call(call_type: str, email: Optional[str] = None):
         elif call_type == "remove_email":
             res = delete_email(conn, email)
             return res
+
 
 def transfer_data():
     with open('../emails.txt', 'r') as f:
