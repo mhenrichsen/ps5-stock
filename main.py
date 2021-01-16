@@ -102,4 +102,4 @@ app.mount("/", StaticFiles(directory="website", html=True), name="website")
 app.add_middleware(CORSMiddleware, allow_origins=["*"])
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=9000)
+    uvicorn.run(app, host="0.0.0.0", port=80)
