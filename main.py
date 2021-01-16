@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from threading import Timer
 import re
-import requests
+import requests as r
 import json
 
 app = FastAPI()
@@ -16,6 +16,7 @@ MAX_REQUEST = 3  # Before timeout
 DEQUE_TIME = 60  # Seconds
 host_dict = {}
 database_url = 'http://46.101.78.63:80/direct-call'
+get_products = 'http://46.101.78.63/get-all-products'
 
 
 @app.get("/add-email")
@@ -28,7 +29,7 @@ async def add_email(email: str, request: Request):
             if re.search(EMAIL_REGEX, email):
                 print(email + ' ready to be added')
                 params = {'call_type': "duplicate_check", "email": email}
-                res = requests.get(url=database_url, params=params)
+                res = r.get(url=database_url, params=params)
                 json_res = res.json()['res']
                 print(json_res)
                 if json_res == 'Email added':
@@ -45,31 +46,31 @@ async def add_email(email: str, request: Request):
 @app.get("/remove-email")
 async def remove_email(email: str):
     params = {'call_type': "remove-email", "email": email}
-    res = requests.get(url=database_url, params=params)
+    res = r.get(url=database_url, params=params)
 
-
-
-    return HTMLResponse(
-        """
-        <html>
-            <head>
-                <title>Email fjernet</title>
-            </head>
-            <body>
-                <h1>""" + email + """ blev fjernet fra listen</h1>
-            </body>
-        </html>
-        """)
+    if res.status_code == 200:
+        return HTMLResponse(
+            """
+            <html>
+                <head>
+                    <title>Email fjernet</title>
+                </head>
+                <body>
+                    <h1>""" + email + """ blev fjernet fra listen</h1>
+                </body>
+            </html>
+            """)
+    else:
+        return HTMLResponse('Something went wrong')
 
 
 # Save email to file
 
 @app.get("/status")
 async def status():
-    with open("status.json") as json_file:
-        data = json.load(json_file)
-
-        return data
+    data = r.get(get_products).json()
+    data = json.loads(data)
+    return data
 
 
 # Repeat function call with set timer

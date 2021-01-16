@@ -153,7 +153,10 @@ def transfer_data_emails():
     with open('../emails.txt', 'r') as f:
         for line in f:
             clean = line.split('\n')[0]
-            direct_call('add_email', clean)
+            call = (clean, time.time())
+            #direct_call('duplicate_check', clean)
+            conn = create_connection(database)
+            create_email(conn, call)
 
 
 def transfer_data_json():
