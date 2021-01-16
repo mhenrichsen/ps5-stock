@@ -91,7 +91,7 @@ def get_all_emails(conn):
     return all_emails
 
 
-@app.get("/get_all_products")
+@app.get("/get-all-products")
 def get_all_products():
     conn = create_connection(database)
     cur = conn.cursor()
@@ -116,11 +116,19 @@ def get_all_products():
     return json.dumps(list_products)
 
 
-@app.get("/update-status")
-async def direct_call(call_type: str, email: Optional[str] = None):
-    # create a database connection
-    conn = create_connection(database)
+@app.get("/update-product")
+async def update_product(url: str, stock: str, time: float):
 
+    call = (stock, time, url)
+    conn = create_connection(database)
+    sql = ''' UPDATE ps5_stock
+              SET stock = ? ,
+                  time = ?
+              WHERE url = ?'''
+    cur = conn.cursor()
+    cur.execute(sql, call)
+    conn.commit()
+    print(url, ' updated')
 
 @app.get("/direct-call")
 async def direct_call(call_type: str, email: Optional[str] = None):
