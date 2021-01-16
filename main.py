@@ -28,14 +28,13 @@ async def add_email(email: str, request: Request):
             if re.search(EMAIL_REGEX, email):
                 print(email + ' ready to be added')
                 params = {'call_type': "duplicate_check", "email": email}
-                added = requests.get(url=database_url, params=params)
-                print(added.json())
-                if added == True:
-                    print('Email added')
-                    return JSONResponse({'Res': 'Email added'})
+                res = requests.get(url=database_url, params=params)
+                json_res = res.json()['res']
+                print(json_res)
+                if json_res == 'Email added':
+                    return JSONResponse({'Res': json_res})
                 else:
-                    print('Duplicate email')
-                    return JSONResponse({'Res': 'Duplicate email'})
+                    return JSONResponse({'Res': json_res})
         print('Invalid email')
         return JSONResponse({'Res': 'Invalid email'}, 400)
     else:
@@ -44,13 +43,11 @@ async def add_email(email: str, request: Request):
 
 
 @app.get("/remove-email")
-async def remove_email(email: str, request: Request):
-    with open("emails.txt", "r") as f:
-        lines = f.readlines()
-    with open("emails.txt", "w") as f:
-        for line in lines:
-            if line.strip("\n") != email:
-                f.write(line)
+async def remove_email(email: str):
+    params = {'call_type': "remove-email", "email": email}
+    res = requests.get(url=database_url, params=params)
+
+
 
     return HTMLResponse(
         """
