@@ -4,9 +4,11 @@ import time
 import json
 import mail as m
 import requests as r
+import os
 
-get_products = 'http://46.101.78.63/get-all-products'
-update_product = 'http://46.101.78.63/update-product'
+database_ip = os.environ['database']
+get_products = 'http://'+database_ip+'/get-all-products'
+update_product = 'http://'+database_ip+'/update-product'
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}

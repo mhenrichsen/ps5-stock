@@ -7,6 +7,7 @@ from threading import Timer
 import re
 import requests as r
 import json
+import os
 
 app = FastAPI()
 FILE_NAME = "emails.txt"
@@ -15,8 +16,10 @@ EMAIL_REGEX = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 MAX_REQUEST = 3  # Before timeout
 DEQUE_TIME = 60  # Seconds
 host_dict = {}
-database_url = 'http://46.101.78.63:80/direct-call'
-get_products = 'http://46.101.78.63/get-all-products'
+
+database_ip = os.environ['database']
+database_url = 'http://'+database_ip+'/direct-call'
+get_products = 'http://'+database_ip+'/get-all-products'
 
 
 @app.get("/add-email")
