@@ -4,7 +4,7 @@ RUN pip install uvicorn fastapi aiofiles
 
 WORKDIR /app
 
-COPY database.py /app
+COPY database/database.py /app
 
 COPY sql.db /app
 

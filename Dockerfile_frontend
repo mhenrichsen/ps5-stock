@@ -1,6 +1,10 @@
 FROM python:3.7
 
-COPY . /app
+COPY /website /app
+
+COPY main.py /app
+
+COPY requirements.txt /app
 
 WORKDIR /app
 
