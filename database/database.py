@@ -117,14 +117,14 @@ def get_all_products():
 
 
 @app.get("/update-product")
-async def update_product(url: str, stock: str, time: float):
+async def update_product(url: str, stock: str, time: str):
 
     call = (stock, time, url)
     conn = create_connection(database)
     sql = ''' UPDATE ps5_stock
               SET stock = ? ,
                   time = ?
-              WHERE url = ?'''
+              WHERE product_url = ?'''
     cur = conn.cursor()
     cur.execute(sql, call)
     conn.commit()
