@@ -8,7 +8,7 @@ timeout = 15 * 60
 last_run = [time.time()]
 
 sender_address = 'mghenrichsen@gmail.com'
-sender_pass = os.environ['MY_PASS']
+sender_pass = '0000'
 print(sender_pass)
 
 def send_email(in_stock):

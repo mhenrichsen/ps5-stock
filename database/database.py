@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from typing import Optional
 from fastapi.responses import JSONResponse
+import json
 
 app = FastAPI()
 
@@ -57,6 +58,14 @@ def create_email(conn, task):
     return JSONResponse({'res': 'Email added'})
 
 
+def create_product(conn, product):
+    sql = ''' INSERT INTO ps5_stock(product_url, product_name, class, store, stock, time, find)
+                  VALUES(?,?,?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, product)
+    conn.commit()
+
+
 def check_email(conn, email):
     all_emails = get_all_emails(conn)
     duplicate = email in all_emails
@@ -82,6 +91,23 @@ def get_all_emails(conn):
     return all_emails
 
 
+@app.get("/get_all_products")
+def get_all_products():
+    conn = create_connection(database)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM ps5_stock")
+
+    products = cur.fetchall()
+
+    return products
+
+
+@app.get("/update-status")
+async def direct_call(call_type: str, email: Optional[str] = None):
+    # create a database connection
+    conn = create_connection(database)
+
+
 @app.get("/direct-call")
 async def direct_call(call_type: str, email: Optional[str] = None):
     # create a database connection
@@ -101,11 +127,28 @@ async def direct_call(call_type: str, email: Optional[str] = None):
             return res
 
 
-def transfer_data():
+def transfer_data_emails():
     with open('../emails.txt', 'r') as f:
         for line in f:
             clean = line.split('\n')[0]
             direct_call('add_email', clean)
+
+
+def transfer_data_json():
+    with open('../status.json') as json_file:
+        data = json.load(json_file)
+        for key in data:
+            store = data[key]['store']
+            product_name = data[key]['product_name']
+            html_class = data[key]['class']
+            product_url = data[key]['product_url']
+            stock = data[key]['stock']
+            time = data[key]['time']
+            find = data[key]['find']
+            print(product_url, product_name, html_class, store, stock, time, find)
+            product = (product_url, product_name, html_class, store, stock, time, find)
+            conn = create_connection(database)
+            create_product(conn, product)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,9 @@ import urllib.request
 import time
 import json
 import mail as m
+import requests as r
 
+get_products = 'http://46.101.78.63/get_all_products'
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}
@@ -32,9 +34,10 @@ def filter_html(url, find, identifier):
 
 while True:
     in_stock = []
-    data = open_data()
+    data = r.get(get_products).content
+    print(data)
     for product in data:
-        try:
+        #try:
             url = data[product]['product_url']
             name = data[product]['product_name']
             identifier = data[product]['class']
@@ -62,8 +65,8 @@ while True:
                     in_stock.append({'store': store, 'name': name, 'url': url})
 
             time.sleep(1)
-        except Exception as e:
-            print(e)
+        #except Exception as e:
+            #print(e)
     if len(in_stock) > 0:
         print('Lets email!')
         m.send_email(in_stock)
