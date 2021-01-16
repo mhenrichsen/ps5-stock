@@ -11,7 +11,6 @@ window.addEventListener("load", function () {
             let row = thead.insertRow();
 
             for (key of head) {
-                console.log(key);
                 let th = document.createElement("th");
                 let text = document.createTextNode(key);
                 th.appendChild(text);
@@ -33,7 +32,6 @@ window.addEventListener("load", function () {
                 }
                 for (ce of therow) {
                     if (ce.includes('lager')) {
-                        console.log('link found');
                         let cell = row.insertCell();
                         let link = document.createElement("a");
                         var href = product_url;
