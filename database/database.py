@@ -99,7 +99,21 @@ def get_all_products():
 
     products = cur.fetchall()
 
-    return products
+    list_products = []
+
+    for product in products:
+        product_url = product[0]
+        product_name = product[1]
+        html_class = product[2]
+        store = product[3]
+        stock = product[4]
+        time = product[5]
+        find = product[6]
+        list_products.append({'product_url': product_url, 'product_name': product_name, 'class': html_class, 'store': store,
+                              'stock': stock, 'time': time, 'find': find})
+
+    print(list_products)
+    return json.dumps(list_products)
 
 
 @app.get("/update-status")

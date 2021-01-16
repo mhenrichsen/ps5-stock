@@ -34,7 +34,7 @@ def filter_html(url, find, identifier):
 
 while True:
     in_stock = []
-    data = r.get(get_products).content
+    data = r.get(get_products).json()
     print(data)
     for product in data:
         #try:
