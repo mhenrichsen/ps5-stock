@@ -2,11 +2,11 @@ import bs4 as bs
 import urllib.request
 import time
 import json
-import mail as m
+#import mail as m
 import requests as r
 import os
 
-database_ip = os.environ['database']
+database_ip = ""
 get_products = 'http://'+database_ip+'/get-all-products'
 update_product = 'http://'+database_ip+'/update-product'
 
@@ -62,6 +62,7 @@ while True:
             time.sleep(1)
         except Exception as e:
             print(e)
+            print(product_url)
     if len(in_stock) > 0:
         print('Lets email!')
-        m.send_email(in_stock)
+        #m.send_email(in_stock)
